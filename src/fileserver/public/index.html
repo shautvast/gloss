@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Gloss dictionary application">
+    <meta name="author" content="Sander Hautvast">
+    <link rel="icon" href="img/dictionary-icon.png">
+
+    <title>Gloss Dictionary</title>
+    <link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/cover.css" rel="stylesheet">
+    <link href="css/Gloss.css" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <base href="/">
+  </head>
+
+  <body ng-app="Gloss" ng-controller="TranslateCtrl">
+    <div class="site-wrapper">
+      <div class="navbar-left inner cover left">
+          <h1>Dictionaries</h1>
+          <div ng-repeat="dictionary in dictionaries">
+            <div class="lead"><a class="btn btn-lg btn-link" ng-style="{color: (currentDictionary == dictionary) ?'white':'grey'}" ng-click="chooseDictionary(this)">{{dictionary}}</a></div>
+          </div>
+          <div class="bottom"> 
+            <form ng-submit="newDictionary()">
+              <input type="text" class="form-control" ng-model="dictionaryName"> <input type="submit" class="btn btn-lg btn-link" value="Add Dictionary"/>
+            </form>
+        </div>
+      </div>
+      <div class="cover-container">
+          <div class="inner cover">
+            <h1 class="cover-heading" ng-hide="adding">Translate</h1>
+            
+            <p class="lead"><input id="searchInput" type="text" class="form-control" ng-hide="adding" ng-keyup="translate()" ng-model="input"></p>
+            <p class="lead cover-heading">
+              <a href="#adding" class="btn btn-lg btn-default" ng-hide="adding">Add</a>
+            </p>
+            <div class="lead cover-heading" ng-show="adding">
+              <h1>Add new translation</h1>
+              <form ng-submit="addTranslation()">
+                word <input id="newKeyInput" type="text" class="form-control" ng-model="newDutchWord" />
+                meaning <input type="text" class="form-control" ng-model="newEnglishWord" />
+                <p></p>
+                <input type="submit" class="btn btn-lg btn-default" value="Add"/>
+              </form>
+            </div>
+            <div class="lead"><table class="table"><tr ng-repeat="word in translation|orderBy:'dutch'"><td>{{word.dutch}}</td><td>{{word.english}}</td></tr></div>
+          </div>
+        </div>
+    </div>
+     <div class="mastfoot cover-heading">
+            <div style="font-size:12px">
+              <p>Built with <a href="https://golang.org">go</a> and <a href="https://angularjs.org">angular</a>.</p>
+            </div>
+    </div>
+
+    <script src="node_modules/angular/angular.min.js"></script>
+    <script src="js/main.js"></script>
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="node_modules/jquery/dist/jquery.min.js"><\/script>')</script>
+    <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+  </body>
+</html>

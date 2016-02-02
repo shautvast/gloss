@@ -1,0 +1,12 @@
+.left{
+	background-color: rgba(0,0,0,.1);
+	color: #b0b0b0;
+	height: 100%;
+	position: absolute;
+}
+
+.bottom{
+	position: absolute;
+	bottom: 0px;
+	float: left;
+}

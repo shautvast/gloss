@@ -6,7 +6,11 @@ import (
 	"log"
 	"net/http"
 	"strings"
+	"sync"
 )
+
+var lock sync.Mutex
+var port = ":8080"
 
 func main() {
 	router := httprouter.New()
@@ -16,7 +20,8 @@ func main() {
 	router.GET("/add/:dictionaryName/:key/:value", AddTranslation)
 	router.NotFound = http.FileServer(http.Dir("public"))
 
-	log.Fatal(http.ListenAndServe(":8080", router))
+	print("running on port", port)
+	log.Fatal(http.ListenAndServe(port, router))
 }
 
 func GetDictionaries(res http.ResponseWriter, req *http.Request, _ httprouter.Params) {
@@ -45,6 +50,8 @@ func GetDictionary(res http.ResponseWriter, req *http.Request, ps httprouter.Par
 }
 
 func AddTranslation(res http.ResponseWriter, req *http.Request, ps httprouter.Params) {
+	lock.Lock()
+
 	dictionary := ps.ByName("dictionaryName")
 	data, err := ioutil.ReadFile("data/" + dictionary + ".json")
 	check(err)
@@ -52,6 +59,8 @@ func AddTranslation(res http.ResponseWriter, req *http.Request, ps httprouter.Pa
 	addition := ",\n\"" + ps.ByName("key") + "\":\"" + ps.ByName("value") + "\"}"
 	jsonText = strings.Replace(jsonText, "}", addition, 1)
 	ioutil.WriteFile("data/"+dictionary+".json", []byte(jsonText), 0644)
+
+	lock.Unlock()
 }
 
 func NewDictionary(res http.ResponseWriter, req *http.Request, ps httprouter.Params) {
